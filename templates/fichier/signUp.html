@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            margin: 3rem auto;
+            max-width: 600px;
+        }
+        .form-title {
+            color: #072c51;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #072c51;
+            margin-bottom: 0.5rem;
+        }
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            margin-bottom: 1.25rem;
+        }
+        .form-control:focus {
+            border-color: #072c51;
+            box-shadow: 0 0 0 0.25rem rgba(7, 44, 81, 0.25);
+        }
+        .submit-btn {
+            background-color: #072c51;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-weight: 500;
+            width: 100%;
+            font-size: 1.1rem;
+            transition: background-color 0.2s;
+        }
+        .submit-btn:hover {
+            background-color: #05408c;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar p-3" style="background-color: #072c51;">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="{% url 'index' %}">
+                <h1 class="text-3xl font-bold">Gestionnaire de Fichiers</h1>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h2 class="form-title">Formulaire d'Inscription</h2>
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Nom -->
+                    <div class="col-md-6">
+                        <label for="id_nom" class="form-label text">Nom</label>
+                        <input type="text" class="form-control" id="id_nom" name="nom" required>
+                    </div>
+                    
+                    <!-- Prénom -->
+                    <div class="col-md-6">
+                        <label for="id_prenom" class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="id_prenom" name="prenom" required>
+                    </div>
+                </div>
+                
+                <!-- CIN -->
+                <div>
+                    <label for="id_cin" class="form-label">CIN</label>
+                    <input type="text" class="form-control" id="id_cin" name="cin" maxlength="10">
+                </div>
+                
+                <!-- Division -->
+                <div>
+                    <label for="id_division" class="form-label">Division</label>
+                    <input type="text" class="form-control" id="id_division" name="division">
+                </div>
+
+                <div>
+                    <label for="id_password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="id_password" name="password">
+                </div>
+                
+                <button type="submit" class="submit-btn mt-2">S'inscrire</button>
+            </form>
+        </div>
+    </div>
+
+
+    <footer class="text-center">
+        <a href="{% url 'seconnecter' %}" class="mb-5 text-3xl font-semibold" style="color:#072c51;text-decoration: none;">Se Connecter</a>
+        <p class="text-muted mt-4">Créer par Imane El hanafi</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    
+</body>
+</html>

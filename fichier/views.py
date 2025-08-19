@@ -57,13 +57,22 @@ class Nouveau_fichier(View):
 
     def post(self, request):
         form = FileForm(request.POST, request.FILES)
-        print('form is valid ?', form.is_valid())
         if form.is_valid():
             fichier = form.save(commit=False)
             fichier.user = request.user 
             fichier.save()
-            print('saved file :', fichier.fichier.name)
-            return redirect('ajouterAvecsuc')
+
+            messages.success(request, "fichier ajouté avec succés")
+
+            if form.cleaned_data.get("partage"):
+                cin = form.cleaned_data.get("cin")
+                try:
+                    destinataire = User.objects.get(cin = cin)
+                    fichier.shared_with.add(destinataire)
+                    messages.success(request, f"Fichier partagé avec {destinataire.nom} {destinataire.prenom}")
+                except User.DoesNotExist :
+                    messages.error(request, f"CIN {cin} n'existe pas")
+
         return render(request, self.template_name, {'form': form})
 
 
@@ -97,7 +106,9 @@ class Fichier_disponible(View):
         if not request.user.is_authenticated:
             raise Http404("Page Not Found")
 
-        files = File.objects.filter(user=request.user)
+        files = File.objects.filter(user=request.user) | File.objects.filter(shared_with=request.user)
+        files = files.distinct()
+
         return render(request, self.template_name, {'files': files})
 
 
@@ -159,3 +170,16 @@ class Logout(View):
     def get(self, request):
         logout(request)
         return redirect('index')
+    
+class Partager_fichier(View):
+    def post(self, request, file_id):
+        cin = request.POST.get("cin") 
+        fichier = get_object_or_404(File, id=file_id, user=request.user)  
+        try:
+            destinataire = User.objects.get(cin=cin)  
+            fichier.shared_with.add(destinataire)   
+            messages.success(request, f"Fichier partagé avec {destinataire.nom} {destinataire.prenom}")
+        except User.DoesNotExist:
+            messages.error(request, "CIN introuvable. Aucun utilisateur trouvé.")
+
+        return redirect(request, "fichierDisponible")

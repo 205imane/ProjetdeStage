@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import Index, Nouveau_fichier, Remplacer_fichier, Fichier_disponible ,Sign_up,Welcome,Ajouter_avecsuc,Logout, Se_connecter
+from .views import Index, Nouveau_fichier, Remplacer_fichier, Fichier_disponible ,Sign_up,Welcome,Ajouter_avecsuc,Logout, Se_connecter , Partager_fichier
 
 
 name = "fichier"
@@ -16,7 +16,8 @@ urlpatterns= [
     path('ajouteavecsuc/',Ajouter_avecsuc.as_view(),name='ajouterAvecsuc'),
     path('remplacerFichier/<int:file_id>/',Remplacer_fichier.as_view(),name = 'remplacerFichier'),
     path('fichierDisponible/',Fichier_disponible.as_view(),name= 'fichierDisponible'),
-]
+    path('partage/<int:file_id>/', Partager_fichier.as_view(), name = "partagerFichier")
+]   
 
 if settings.DEBUG :
 

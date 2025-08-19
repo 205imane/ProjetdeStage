@@ -59,9 +59,13 @@ class File(models.Model):
     fichier = models.FileField(upload_to='uploads/', default = "Fichier N'existe Pas")
     user = models.ForeignKey(User, on_delete=models.CASCADE , null = True )
     partage = models.BooleanField(default = False )
+    shared_with = models.ManyToManyField(User, related_name="shared_files", blank = True)
     uploaded_at = models.DateField(null = True , blank = True)
+    @property
     def __str__(self):
-        return f"{self.partage}"
+        return self.shared_with.exists()
+    def __str__(self):
+        return f"{self.fichier.name}"
 
 
 
